@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-e$(eeg=&@+hdpy1reo)$dsgg&y=jjd9+w^i#c9gia0l)c)m+x7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com', 'http://127.0.0.1:8000']
+
+
 
 
 # Application definition
@@ -38,10 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tasks',
-    'users'
+    'users',
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +54,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
 ]
 
 ROOT_URLCONF = 'task_mangement.urls'
@@ -73,13 +84,27 @@ WSGI_APPLICATION = 'task_mangement.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# for sqlite
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+# for postgres
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'task_mangement',
+        'USER': 'postgres',
+        'PASSWORD': '#Admin123',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
+
 
 
 # Password validation
@@ -117,6 +142,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
